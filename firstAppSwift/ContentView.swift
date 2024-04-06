@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    //declare search
-    @State private var search: String = ""
+    //declare categories table
+    private let categories = ["All","Chair","Sofa","Lamp","Kitchen","Table"]
+    @State private var selectedIndex: Int = 0
   /*  var colums: [GridItem] =  [GridItem(.adaptive(minimum: 160) , spacing: 20)]
     */
     var body: some View {
@@ -30,14 +31,23 @@ struct ContentView: View {
             VStack(alignment: .leading) {
                 AppBarView()
                 TagLineView().padding()
-                
-              HStack {
-                TextField("Search Furniture",text: $search)}
+                SearchAndScanView()
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(0 ..< categories.count)  { i in
+                            //if index ==1 then isActive is true
+                            CategoryView(isActive: i == self.selectedIndex,
+                                         text: self.categories[i])
+                                .onTapGesture {
+                                    self.selectedIndex = i
+                                    
+                            }
+                        }
+                    }
                 .padding()
-                .background(Color.white)
-                .cornerRadius(10.0)
+                }
                 
-        }
+            }
     }
 
     }
@@ -87,5 +97,56 @@ struct TagLineView: View {
         Text("Find The \nBest ")
             .font(.custom("PlayfairDisplay-Regular", size: 28)).foregroundColor(Color("secondColor"))
             + Text("Furniture!").font(.custom("PlayfairDisplay-Bold", size: 28)).foregroundColor(Color("thirdColor"))
+    }
+}
+
+struct SearchAndScanView: View {
+    //declare search
+     @State private var search: String = ""
+    var body: some View {
+        HStack {
+            HStack {
+                Image("Search")
+                    .resizable() // Make the image resizable
+                    .aspectRatio(contentMode: .fit) // Maintain aspect ratio
+                    .frame(width: 28, height: 28) // Set the desired size
+                    .padding(.trailing) // Add trailing padding
+                
+                TextField("Search Furniture", text: $search)
+            }.padding(.all,20)
+                .background(Color.white)
+                .cornerRadius(10.0)
+                .padding(.trailing)
+            
+            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                Image("scan")
+                    .resizable()
+                    .frame(width: 45, height: 55)
+                    .cornerRadius(10.0)
+                    .padding()
+            }.buttonStyle(PlainButtonStyle())
+            
+            
+        }
+        .padding(.horizontal)
+    }
+}
+
+struct CategoryView: View {
+    let isActive: Bool
+    let text: String
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(text)
+                .font(.system(size: 18))
+                .fontWeight(.medium)
+                .foregroundColor(isActive ?  Color("secondColor") : Color.black.opacity(0.5))
+                
+            if(isActive){
+                Color("secondColor").frame(width: 15, height: 2)
+                .clipShape(Capsule())
+            }
+        }
+        .padding(.trailing)
     }
 }
