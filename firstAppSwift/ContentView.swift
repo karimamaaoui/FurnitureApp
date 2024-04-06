@@ -28,27 +28,57 @@ struct ContentView: View {
                 }*/
         ZStack {
             Color("Bg").edgesIgnoringSafeArea(.all)
-            VStack(alignment: .leading) {
-                AppBarView()
-                TagLineView().padding()
-                SearchAndScanView()
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(0 ..< categories.count)  { i in
-                            //if index ==1 then isActive is true
-                            CategoryView(isActive: i == self.selectedIndex,
-                                         text: self.categories[i])
-                                .onTapGesture {
-                                    self.selectedIndex = i
-                                    
+            ScrollView {
+                VStack(alignment: .leading) {
+                    AppBarView()
+                    TagLineView().padding()
+                    SearchAndScanView()
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(0 ..< categories.count)  { i in
+                                //if index ==1 then isActive is true
+                                CategoryView(isActive: i == self.selectedIndex,
+                                             text: self.categories[i])
+                                    .onTapGesture {
+                                        self.selectedIndex = i
+                                        
+                                }
                             }
                         }
+                    .padding()
                     }
-                .padding()
-                }
+                  Text("Popular")
+                    .font(.custom("PlayfairDisplay-Bold", size: 24))
+                    .padding(.horizontal).padding(.top)
                 
+                    ScrollView (.horizontal ,showsIndicators: false) {
+                        HStack {
+                            ForEach(0 ..< 4) {  index in
+                                ProductCarView(image: Image("chair\(index + 1)"),size: 210)
+                            }
+                            .padding(.trailing)
+                        }.padding(.leading)
+                        
+                    }
+                    Text("Best")
+                    .font(.custom("PlayfairDisplay-Bold", size: 24))
+                    .padding(.horizontal)
+                        .padding(.top)
+                    
+                    ScrollView (.horizontal ,showsIndicators: false) {
+                        HStack {
+                            ForEach(0 ..< 4) {  index in
+                                ProductCarView(image: Image("chair\(index + 1)"),size: 180)
+                            }
+                            .padding(.trailing)
+                        }.padding(.leading)
+                        
+                    }
+                    
+                    
+                }
             }
-    }
+        }
 
     }
 }
@@ -148,5 +178,36 @@ struct CategoryView: View {
             }
         }
         .padding(.trailing)
+    }
+}
+
+struct ProductCarView: View {
+    let image : Image
+    let size: CGFloat
+    var body: some View {
+        VStack {
+            image
+                .resizable()
+                .frame(width: size, height: 200 * (size/210))
+                .cornerRadius(20.0)
+            
+            Text("Luxury Swedian chair")
+                .fontWeight(.bold)
+            
+            HStack (spacing: 2) {
+                ForEach(/*@START_MENU_TOKEN@*/0 ..< 5/*@END_MENU_TOKEN@*/) { item in
+                    Image("star")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                Spacer()
+                
+                Text("$233").fontWeight(.bold)
+            }
+        }
+        .frame(width: size)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(20.0)
     }
 }
